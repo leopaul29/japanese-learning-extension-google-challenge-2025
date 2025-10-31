@@ -69,46 +69,69 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 	}
 });
 
-// Fonction placeholder pour la génération d'exercices avec IA
-async function generateExercisesWithAI(text, analysis) {
-	// TODO: Implémenter l'intégration avec Gemini Nano
-	// Pour l'instant, retourner des données de test
+// Import des fonctions Gemini API
+importScripts("gemini-api.js");
 
-	return new Promise((resolve) => {
-		setTimeout(() => {
-			resolve({
-				type: "multiple-choice",
-				questions: [
-					{
-						question: "Quel est le sens de ce texte ?",
-						options: ["Option A", "Option B", "Option C", "Option D"],
-						correctAnswer: 0,
-					},
-				],
+// Fonction pour générer des exercices avec l'API Gemini
+async function generateExercisesWithAI(text, analysis) {
+	try {
+		// Récupérer le niveau de l'utilisateur
+		const level = await new Promise((resolve) => {
+			chrome.storage.local.get(["level"], (data) => {
+				resolve(data.level || "intermediate");
 			});
-		}, 500);
-	});
+		});
+
+		const result = await generateExercises(text, level);
+
+		if (result.success) {
+			return result.exercises;
+		} else {
+			throw new Error(result.error || "Erreur génération exercices");
+		}
+	} catch (error) {
+		console.error("Erreur génération exercices:", error);
+
+		// Si l'API échoue, retourner des exercices par défaut
+		return {
+			vocabulary: [],
+			exercises: [
+				{
+					type: "info",
+					question: "Configuration requise",
+					message:
+						"Veuillez configurer votre clé API Gemini dans les paramètres.",
+				},
+			],
+			grammar: [],
+		};
+	}
 }
 
-// Fonction placeholder pour l'analyse de vocabulaire avec IA
+// Fonction pour analyser le vocabulaire avec l'API Gemini
 async function analyzeVocabularyWithAI(text, analysis) {
-	// TODO: Implémenter l'intégration avec Gemini Nano
-
-	return new Promise((resolve) => {
-		setTimeout(() => {
-			resolve({
-				words: [
-					{ kanji: "日本", reading: "にほん", meaning: "Japon", level: "N5" },
-					{
-						kanji: "勉強",
-						reading: "べんきょう",
-						meaning: "Étude",
-						level: "N4",
-					},
-				],
+	try {
+		const level = await new Promise((resolve) => {
+			chrome.storage.local.get(["level"], (data) => {
+				resolve(data.level || "intermediate");
 			});
-		}, 500);
-	});
+		});
+
+		const result = await analyzeVocabulary(text, level);
+
+		if (result.success) {
+			return result.vocabulary;
+		} else {
+			throw new Error(result.error || "Erreur analyse vocabulaire");
+		}
+	} catch (error) {
+		console.error("Erreur analyse vocabulaire:", error);
+
+		return {
+			words: [],
+			message: "Veuillez configurer votre clé API Gemini dans les paramètres.",
+		};
+	}
 }
 
 console.log("Service Worker Japanese Learning actif!");

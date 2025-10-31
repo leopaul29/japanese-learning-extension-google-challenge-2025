@@ -54,9 +54,7 @@ document.getElementById("review-btn").addEventListener("click", () => {
 
 // Bouton paramètres
 document.getElementById("settings-btn").addEventListener("click", () => {
-	chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-		chrome.tabs.sendMessage(tabs[0].id, { action: "openSettings" });
-	});
+	chrome.tabs.create({ url: chrome.runtime.getURL("settings.html") });
 });
 
 // Charger les données au démarrage

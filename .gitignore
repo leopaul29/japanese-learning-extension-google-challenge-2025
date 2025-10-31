@@ -1,0 +1,31 @@
+# Ne jamais commiter les clés API
+.env
+.env.local
+.env.development
+.env.production
+
+# Fichiers de configuration locaux
+config.local.js
+api-keys.json
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# Fichiers de développement
+*.log
+*.swp
+*.swo
+*~
+
+# Node modules (si vous utilisez npm)
+node_modules/
+
+# Archives et builds
+*.zip
+*.crx
+*.pem
+
+# Dossiers de développement
+.vscode/
+.idea/
