@@ -1,0 +1,208 @@
+/* styles.css - Styles pour les popups et panneaux */
+
+/* Popup de sélection */
+.jl-popup {
+	position: absolute;
+	z-index: 999999;
+	background: white;
+	border-radius: 12px;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+	min-width: 320px;
+	max-width: 400px;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+	animation: jl-slideIn 0.2s ease-out;
+}
+
+@keyframes jl-slideIn {
+	from {
+		opacity: 0;
+		transform: translateY(-10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.jl-popup-content {
+	padding: 16px;
+}
+
+.jl-popup-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 12px;
+}
+
+.jl-popup-title {
+	font-weight: 600;
+	font-size: 14px;
+	color: #1a1a1a;
+}
+
+.jl-popup-close {
+	background: none;
+	border: none;
+	font-size: 24px;
+	color: #666;
+	cursor: pointer;
+	padding: 0;
+	width: 24px;
+	height: 24px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 4px;
+	transition: background 0.2s;
+}
+
+.jl-popup-close:hover {
+	background: #f0f0f0;
+}
+
+.jl-popup-stats {
+	display: flex;
+	gap: 12px;
+	margin-bottom: 12px;
+}
+
+.jl-stat {
+	font-size: 12px;
+	color: #666;
+	background: #f5f5f5;
+	padding: 4px 8px;
+	border-radius: 6px;
+}
+
+.jl-popup-text {
+	background: #f9f9f9;
+	padding: 12px;
+	border-radius: 8px;
+	font-size: 14px;
+	line-height: 1.6;
+	color: #333;
+	margin-bottom: 12px;
+	max-height: 120px;
+	overflow-y: auto;
+	word-wrap: break-word;
+}
+
+.jl-popup-actions {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.jl-btn {
+	border: none;
+	padding: 10px 16px;
+	border-radius: 8px;
+	font-size: 13px;
+	font-weight: 500;
+	cursor: pointer;
+	transition: all 0.2s;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+}
+
+.jl-btn-primary {
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	color: white;
+}
+
+.jl-btn-primary:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.jl-btn-secondary {
+	background: #f0f0f0;
+	color: #333;
+}
+
+.jl-btn-secondary:hover {
+	background: #e0e0e0;
+}
+
+/* Panneaux latéraux */
+.jl-panel {
+	position: fixed;
+	top: 0;
+	right: 0;
+	width: 400px;
+	height: 100vh;
+	background: white;
+	box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+	z-index: 999998;
+	animation: jl-slideInRight 0.3s ease-out;
+}
+
+@keyframes jl-slideInRight {
+	from {
+		transform: translateX(100%);
+	}
+	to {
+		transform: translateX(0);
+	}
+}
+
+.jl-panel-content {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+.jl-panel-header {
+	padding: 20px;
+	border-bottom: 1px solid #e0e0e0;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.jl-panel-header h2 {
+	margin: 0;
+	font-size: 18px;
+	color: #1a1a1a;
+}
+
+.jl-panel-close {
+	background: none;
+	border: none;
+	font-size: 28px;
+	color: #666;
+	cursor: pointer;
+	padding: 0;
+	width: 32px;
+	height: 32px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 6px;
+	transition: background 0.2s;
+}
+
+.jl-panel-close:hover {
+	background: #f0f0f0;
+}
+
+.jl-panel-body {
+	flex: 1;
+	padding: 20px;
+	overflow-y: auto;
+}
+
+/* Responsive pour petits écrans */
+@media (max-width: 768px) {
+	.jl-popup {
+		min-width: 280px;
+		max-width: calc(100vw - 40px);
+	}
+
+	.jl-panel {
+		width: 100%;
+	}
+}

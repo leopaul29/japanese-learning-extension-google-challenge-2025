@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Japanese Learning Assistant</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 350px;
+      min-height: 400px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .header h1 {
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      font-size: 13px;
+      opacity: 0.9;
+    }
+
+    .level-section {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      backdrop-filter: blur(10px);
+    }
+
+    .level-section h2 {
+      font-size: 14px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .level-buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .level-btn {
+      flex: 1;
+      padding: 10px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s;
+      font-weight: 500;
+    }
+
+    .level-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .level-btn.active {
+      background: white;
+      color: #667eea;
+      border-color: white;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+
+    .stat-number {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      opacity: 0.9;
+    }
+
+    .quick-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .action-btn {
+      padding: 12px;
+      border: none;
+      background: white;
+      color: #667eea;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      font-size: 11px;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🎌 Japanese Learning</h1>
+      <p>Sélectionnez du texte pour apprendre</p>
+    </div>
+
+    <div class="level-section">
+      <h2>📊 Votre niveau</h2>
+      <div class="level-buttons">
+        <button class="level-btn" data-level="beginner">Débutant</button>
+        <button class="level-btn active" data-level="intermediate">Intermédiaire</button>
+        <button class="level-btn" data-level="advanced">Avancé</button>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-number" id="words-learned">0</div>
+        <div class="stat-label">Mots appris</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="exercises-done">0</div>
+        <div class="stat-label">Exercices faits</div>
+      </div>
+    </div>
+
+    <div class="quick-actions">
+      <button class="action-btn" id="practice-btn">
+        ✏️ Pratiquer maintenant
+      </button>
+      <button class="action-btn" id="review-btn">
+        📚 Revoir le vocabulaire
+      </button>
+      <button class="action-btn" id="settings-btn">
+        ⚙️ Paramètres
+      </button>
+    </div>
+
+    <div class="footer">
+      Sélectionnez du texte japonais sur n'importe quelle page
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
