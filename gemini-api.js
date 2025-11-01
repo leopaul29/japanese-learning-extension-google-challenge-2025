@@ -75,26 +75,26 @@ async function callGeminiAPI(prompt, options = {}) {
 	}
 }
 
-// Générer des exercices basés sur un texte japonais
+// Generate exercises based on Japanese text
 async function generateExercises(japaneseText, userLevel = "intermediate") {
-	const prompt = `Tu es un professeur de japonais expert. Analyse ce texte japonais et génère 1 exercices adaptés au niveau ${userLevel}.
+	const prompt = `You are an expert Japanese teacher. Analyze this Japanese text and generate 1 exercise adapted to the ${userLevel} level.
 
-Texte: ${japaneseText}
+Text: ${japaneseText}
 
-Format de réponse en JSON:
+Response format in JSON:
 {
   "exercises": [
     {
       "type": "multiple_choice",
-      "question": "Question en français",
+      "question": "Question in English",
       "options": ["A", "B", "C", "D"],
       "correctAnswer": 0,
-      "explanation": "Explication détaillée"
+      "explanation": "Detailed explanation"
     }
   ]
 }
 
-Réponds UNIQUEMENT avec le JSON, sans texte avant ou après.`;
+Reply ONLY with the JSON, no text before or after.`;
 
 	const result = await callGeminiAPI(prompt, {
 		temperature: 0.5,
@@ -121,27 +121,27 @@ Réponds UNIQUEMENT avec le JSON, sans texte avant ou après.`;
 	return result;
 }
 
-// Analyser le vocabulaire d'un texte
+// Analyze vocabulary from text
 async function analyzeVocabulary(japaneseText, userLevel = "intermediate") {
-	const prompt = `Analyse ce texte japonais et extrait le vocabulaire important pour un apprenant de niveau ${userLevel}.
+	const prompt = `Analyze this Japanese text and extract important vocabulary for a ${userLevel} level learner.
 
-Texte: ${japaneseText}
+Text: ${japaneseText}
 
-Format de réponse en JSON:
+Response format in JSON:
 {
   "words": [
     {
       "kanji": "漢字",
       "reading": "かんじ",
-      "meaning": "caractère chinois",
+      "meaning": "chinese character",
       "level": "N5",
-      "partOfSpeech": "nom",
-      "example": "exemple de phrase"
+      "partOfSpeech": "noun",
+      "example": "example sentence"
     }
   ]
 }
 
-Réponds UNIQUEMENT avec le JSON.`;
+Reply ONLY with the JSON.`;
 
 	const result = await callGeminiAPI(prompt, {
 		temperature: 0.3,
@@ -163,17 +163,17 @@ Réponds UNIQUEMENT avec le JSON.`;
 	return result;
 }
 
-// Évaluer une réponse d'utilisateur
+// Evaluate user answer
 async function evaluateAnswer(question, userAnswer, correctAnswer) {
-	const prompt = `Tu es un professeur de japonais. Évalue cette réponse:
+	const prompt = `You are a Japanese teacher. Evaluate this answer:
 
 Question: ${question}
-Réponse de l'utilisateur: ${userAnswer}
-Réponse correcte: ${correctAnswer}
+User Answer: ${userAnswer}
+Correct Answer: ${correctAnswer}
 
-Fournis un feedback constructif en expliquant pourquoi la réponse est correcte ou incorrecte, et donne des conseils pour s'améliorer.
+Provide constructive feedback explaining why the answer is correct or incorrect, and give tips for improvement.
 
-Réponds en français de manière concise (3-4 phrases maximum).`;
+Reply in English concisely (3-4 sentences maximum).`;
 
 	const result = await callGeminiAPI(prompt, {
 		temperature: 0.7,

@@ -48,11 +48,11 @@ function createSelectionPopup(selectedText, rect) {
 	popup.innerHTML = `
     <div class="jl-popup-content">
       <div class="jl-popup-header">
-        <span class="jl-popup-title">📚 Texte japonais détecté</span>
+        <span class="jl-popup-title">📚 Japanese Text Detected</span>
         <button class="jl-popup-close" id="jl-close-btn">×</button>
       </div>
       <div class="jl-popup-stats">
-        <span class="jl-stat">📝 ${analysis.length} caractères</span>
+        <span class="jl-stat">📝 ${analysis.length} characters</span>
         <span class="jl-stat">🔤 ${analysis.kanjiCount} kanji</span>
       </div>
       <div class="jl-popup-text">
@@ -62,10 +62,10 @@ function createSelectionPopup(selectedText, rect) {
       </div>
       <div class="jl-popup-actions">
         <button class="jl-btn jl-btn-primary" id="jl-generate-exercises">
-          ✨ Générer des exercices
+          ✨ Generate Exercises
         </button>
         <button class="jl-btn jl-btn-secondary" id="jl-analyze-text">
-          🔍 Analyser le vocabulaire
+          🔍 Analyze Vocabulary
         </button>
       </div>
     </div>
@@ -268,12 +268,12 @@ function showVocabularyPanel(vocabulary) {
 	panel.innerHTML = `
     <div class="jl-panel-content">
       <div class="jl-panel-header">
-        <h2>🔍 Analyse du vocabulaire</h2>
+        <h2>🔍 Vocabulary Analysis</h2>
         <button class="jl-panel-close">×</button>
       </div>
       <div class="jl-panel-body">
-        <p>🚧 Fonctionnalité en cours de développement</p>
-        <p>Le vocabulaire sera analysé ici</p>
+        <p>🚧 Feature under development</p>
+        <p>Vocabulary will be analyzed here</p>
       </div>
     </div>
   `;
@@ -314,19 +314,19 @@ function checkAnswer(button, questionIndex, correctAnswer) {
 	const explanation = exerciseCard.querySelector(".jl-explanation");
 
 	if (!selectedOption) {
-		alert("Veuillez sélectionner une réponse");
+		alert("Please select an answer");
 		return;
 	}
 
 	const selectedAnswer = parseInt(selectedOption.value);
 	const isCorrect = selectedAnswer === correctAnswer;
 
-	// Désactiver les options après la réponse
+	// Disable options after answering
 	exerciseCard.querySelectorAll('input[type="radio"]').forEach((input) => {
 		input.disabled = true;
 	});
 
-	// Marquer les bonnes/mauvaises réponses
+	// Mark correct/incorrect answers
 	exerciseCard.querySelectorAll(".jl-option").forEach((option, index) => {
 		if (index === correctAnswer) {
 			option.classList.add("jl-correct");
@@ -335,7 +335,7 @@ function checkAnswer(button, questionIndex, correctAnswer) {
 		}
 	});
 
-	// Mettre à jour le style du bouton et désactiver
+	// Update button style and disable
 	button.disabled = true;
 	button.classList.add(isCorrect ? "jl-correct-btn" : "jl-incorrect-btn");
 	button.textContent = isCorrect ? "✓ Correct!" : "✗ Incorrect";
