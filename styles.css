@@ -138,6 +138,7 @@
 	box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
 	z-index: 999998;
 	animation: jl-slideInRight 0.3s ease-out;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 @keyframes jl-slideInRight {
@@ -204,5 +205,221 @@
 
 	.jl-panel {
 		width: 100%;
+	}
+}
+
+/* Cartes de vocabulaire */
+.jl-word-card {
+	background: #f9f9f9;
+	border-left: 4px solid #667eea;
+	padding: 16px;
+	border-radius: 8px;
+	margin-bottom: 12px;
+}
+
+.jl-word-main {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin-bottom: 8px;
+}
+
+.jl-kanji {
+	font-size: 24px;
+	font-weight: bold;
+	color: #1a1a1a;
+}
+
+.jl-reading {
+	font-size: 14px;
+	color: #666;
+	font-style: italic;
+}
+
+.jl-level-badge {
+	background: #667eea;
+	color: white;
+	padding: 2px 8px;
+	border-radius: 12px;
+	font-size: 11px;
+	font-weight: 600;
+	margin-left: auto;
+}
+
+.jl-word-meaning {
+	font-size: 14px;
+	color: #333;
+	margin-bottom: 6px;
+}
+
+.jl-word-pos {
+	font-size: 12px;
+	color: #999;
+	font-style: italic;
+	margin-bottom: 6px;
+}
+
+.jl-word-example {
+	font-size: 13px;
+	color: #555;
+	background: white;
+	padding: 8px;
+	border-radius: 6px;
+	margin-top: 8px;
+}
+
+/* Cartes d'exercices */
+.jl-exercise-card {
+	background: white;
+	border: 2px solid #e0e0e0;
+	border-left: 4px solid #667eea;
+	border-radius: 12px;
+	padding: 20px;
+	margin-bottom: 16px;
+}
+
+.jl-exercise-number {
+	display: inline-block;
+	background: #667eea;
+	color: white;
+	padding: 4px 12px;
+	border-radius: 16px;
+	font-size: 12px;
+	font-weight: 600;
+	margin-bottom: 12px;
+}
+
+.jl-exercise-question p {
+	font-size: 15px;
+	color: #1a1a1a;
+	margin: 12px 0;
+	line-height: 1.6;
+}
+
+.jl-exercise-options {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	margin: 16px 0;
+}
+
+.jl-option {
+	display: flex;
+	align-items: center;
+	padding: 12px;
+	background: #f5f5f5;
+	border-radius: 8px;
+	cursor: pointer;
+	transition: all 0.2s;
+}
+
+.jl-option:hover {
+	background: #e8e8e8;
+}
+
+.jl-option input[type="radio"] {
+	margin-right: 12px;
+	width: 18px;
+	height: 18px;
+	cursor: pointer;
+}
+
+.jl-option span {
+	font-size: 14px;
+	color: #333;
+}
+
+.jl-check-btn {
+	width: 100%;
+	padding: 12px;
+	background: #667eea;
+	color: white;
+	border: none;
+	border-radius: 8px;
+	font-size: 14px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.2s;
+}
+
+.jl-check-btn:hover:not(:disabled) {
+	background: #5568d3;
+}
+
+.jl-check-btn:disabled {
+	cursor: not-allowed;
+	opacity: 0.8;
+}
+
+.jl-correct-btn {
+	background: #4caf50 !important;
+}
+
+.jl-incorrect-btn {
+	background: #f44336 !important;
+}
+
+.jl-option.jl-correct {
+	background: #e8f5e9 !important;
+	border: 2px solid #4caf50;
+}
+
+.jl-option.jl-incorrect {
+	background: #ffebee !important;
+	border: 2px solid #f44336;
+}
+
+.jl-explanation {
+	margin-top: 16px;
+	padding: 12px;
+	background: #e7f3ff;
+	border-left: 4px solid #2196f3;
+	border-radius: 6px;
+	font-size: 13px;
+	line-height: 1.6;
+	color: #333;
+}
+
+.jl-info-message {
+	background: #fff3cd;
+	border: 1px solid #ffc107;
+	color: #856404;
+	padding: 16px;
+	border-radius: 8px;
+	font-size: 14px;
+	text-align: center;
+}
+
+/* Loader */
+.jl-loader-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 2rem;
+	text-align: center;
+}
+
+.jl-loader {
+	width: 48px;
+	height: 48px;
+	border: 4px solid #f3f3f3;
+	border-top: 4px solid #667eea;
+	border-radius: 50%;
+	animation: jl-spin 1s linear infinite;
+	margin-bottom: 1rem;
+}
+
+.jl-loader-text {
+	color: #666;
+	font-size: 14px;
+}
+
+@keyframes jl-spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
 	}
 }

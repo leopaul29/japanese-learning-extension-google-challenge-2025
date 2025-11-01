@@ -77,15 +77,12 @@ async function callGeminiAPI(prompt, options = {}) {
 
 // Générer des exercices basés sur un texte japonais
 async function generateExercises(japaneseText, userLevel = "intermediate") {
-	const prompt = `Tu es un professeur de japonais expert. Analyse ce texte japonais et génère 3 exercices adaptés au niveau ${userLevel}.
+	const prompt = `Tu es un professeur de japonais expert. Analyse ce texte japonais et génère 1 exercices adaptés au niveau ${userLevel}.
 
 Texte: ${japaneseText}
 
 Format de réponse en JSON:
 {
-  "vocabulary": [
-    {"word": "mot", "reading": "lecture", "meaning": "sens", "level": "N5"}
-  ],
   "exercises": [
     {
       "type": "multiple_choice",
@@ -94,9 +91,6 @@ Format de réponse en JSON:
       "correctAnswer": 0,
       "explanation": "Explication détaillée"
     }
-  ],
-  "grammar": [
-    {"pattern": "forme grammaticale", "explanation": "explication"}
   ]
 }
 

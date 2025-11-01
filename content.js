@@ -103,6 +103,30 @@ function createSelectionPopup(selectedText, rect) {
 function generateExercises(text, analysis) {
 	console.log("Génération d'exercices pour:", text);
 
+	// Créer et afficher le panneau avec le loader
+	const panel = document.createElement("div");
+	panel.id = "jl-exercise-panel";
+	panel.className = "jl-panel";
+	panel.innerHTML = `
+		<div class="jl-panel-content">
+			<div class="jl-panel-header">
+				<h2>✨ Generated Exercises</h2>
+				<button class="jl-panel-close">×</button>
+			</div>
+			<div class="jl-panel-body">
+				<div class="jl-loader-container">
+					<div class="jl-loader"></div>
+					<div class="jl-loader-text">Génération des exercices en cours...</div>
+				</div>
+			</div>
+		</div>
+	`;
+	document.body.appendChild(panel);
+
+	panel.querySelector(".jl-panel-close").addEventListener("click", () => {
+		panel.remove();
+	});
+
 	// Envoyer au service worker pour traitement
 	chrome.runtime.sendMessage(
 		{
@@ -113,6 +137,15 @@ function generateExercises(text, analysis) {
 		(response) => {
 			if (response && response.success) {
 				showExercisePanel(response.exercises);
+				panel.remove(); // Supprimer le panneau avec le loader
+			} else {
+				// En cas d'erreur, afficher un message
+				panel.querySelector(".jl-panel-body").innerHTML = `
+					<div class="jl-info-message">
+						⚠️ Une erreur est survenue lors de la génération des exercices.
+						Veuillez réessayer.
+					</div>
+				`;
 			}
 		}
 	);
@@ -141,20 +174,86 @@ function showExercisePanel(exercises) {
 	const panel = document.createElement("div");
 	panel.id = "jl-exercise-panel";
 	panel.className = "jl-panel";
+
+	let exercisesHTML = "";
+
+	if (exercises.exercises && exercises.exercises.length > 0) {
+		exercisesHTML = exercises.exercises
+			.map((ex, idx) => {
+				if (ex.type === "info") {
+					return `<div class="jl-info-message">⚠️ ${ex.message}</div>`;
+				}
+
+				if (ex.type === "multiple_choice") {
+					const optionsHTML = ex.options
+						.map(
+							(opt, i) => `
+          <label class="jl-option">
+            <input type="radio" name="q${idx}" value="${i}">
+            <span>${opt}</span>
+          </label>
+        `
+						)
+						.join("");
+
+					return `
+          <div class="jl-exercise-card" data-answer="${
+						ex.correctAnswer
+					}" data-idx="${idx}">
+            <div class="jl-exercise-question">
+              <span class="jl-exercise-number">Question ${idx + 1}</span>
+              <p>${ex.question}</p>
+            </div>
+            <div class="jl-exercise-options">
+              ${optionsHTML}
+            </div>
+            <button class="jl-check-btn">
+              ✓ Check Answer
+            </button>
+            ${
+							ex.explanation
+								? `
+              <div class="jl-explanation" style="display:none;">
+                💡 <strong>Explanation:</strong> ${ex.explanation}
+              </div>
+            `
+								: ""
+						}
+          </div>
+        `;
+				}
+
+				return "";
+			})
+			.join("");
+	} else {
+		exercisesHTML = `<div class="jl-info-message">⚠️ Please configure your Gemini API key in settings</div>`;
+	}
+
 	panel.innerHTML = `
     <div class="jl-panel-content">
       <div class="jl-panel-header">
-        <h2>✨ Exercices générés</h2>
+        <h2>✨ Generated Exercises</h2>
         <button class="jl-panel-close">×</button>
       </div>
       <div class="jl-panel-body">
-        <p>🚧 Fonctionnalité en cours de développement</p>
-        <p>Les exercices seront générés ici avec Gemini Nano</p>
+        ${exercisesHTML}
       </div>
     </div>
   `;
 
 	document.body.appendChild(panel);
+
+	// Ajouter les event listeners pour les boutons de vérification
+	const checkButtons = panel.querySelectorAll(".jl-check-btn");
+	checkButtons.forEach((btn) => {
+		btn.addEventListener("click", () => {
+			const card = btn.closest(".jl-exercise-card");
+			const questionIndex = Number.parseInt(card.dataset.idx);
+			const correctAnswer = Number.parseInt(card.dataset.answer);
+			checkAnswer(btn, questionIndex, correctAnswer);
+		});
+	});
 
 	panel.querySelector(".jl-panel-close").addEventListener("click", () => {
 		panel.remove();
@@ -201,6 +300,57 @@ document.addEventListener("mouseup", (e) => {
 		}
 	}, 10);
 });
+
+// Fonction pour vérifier la réponse à une question
+function checkAnswer(button, questionIndex, correctAnswer) {
+	console.log("Vérification de la réponse pour la question", questionIndex);
+	console.log("Réponse correcte:", correctAnswer);
+
+	const exerciseCard = button.closest(".jl-exercise-card");
+	console.log("Carte d'exercice:", exerciseCard);
+	const selectedOption = exerciseCard.querySelector(
+		'input[name="q' + questionIndex + '"]:checked'
+	);
+	const explanation = exerciseCard.querySelector(".jl-explanation");
+
+	if (!selectedOption) {
+		alert("Veuillez sélectionner une réponse");
+		return;
+	}
+
+	const selectedAnswer = parseInt(selectedOption.value);
+	const isCorrect = selectedAnswer === correctAnswer;
+
+	// Désactiver les options après la réponse
+	exerciseCard.querySelectorAll('input[type="radio"]').forEach((input) => {
+		input.disabled = true;
+	});
+
+	// Marquer les bonnes/mauvaises réponses
+	exerciseCard.querySelectorAll(".jl-option").forEach((option, index) => {
+		if (index === correctAnswer) {
+			option.classList.add("jl-correct");
+		} else if (index === selectedAnswer && !isCorrect) {
+			option.classList.add("jl-incorrect");
+		}
+	});
+
+	// Mettre à jour le style du bouton et désactiver
+	button.disabled = true;
+	button.classList.add(isCorrect ? "jl-correct-btn" : "jl-incorrect-btn");
+	button.textContent = isCorrect ? "✓ Correct!" : "✗ Incorrect";
+
+	// Afficher l'explication si elle existe
+	if (explanation) {
+		explanation.style.display = "block";
+	}
+
+	// Sauvegarder la progression
+	chrome.runtime.sendMessage({
+		action: "saveProgress",
+		wordsLearned: isCorrect ? 1 : 0,
+	});
+}
 
 // Listener pour les messages du service worker
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
