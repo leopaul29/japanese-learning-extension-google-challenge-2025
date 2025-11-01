@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini API Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 24px;
+            font-size: 24px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 14px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        input[type="password"] {
+            font-family: 'Courier New', monospace;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .result {
+            margin-top: 24px;
+            padding: 16px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        .result.success {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            color: #155724;
+        }
+
+        .result.error {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+            color: #721c24;
+        }
+
+        .result h3 {
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .result pre {
+            background: rgba(0, 0, 0, 0.05);
+            padding: 12px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 13px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .info {
+            background: #e7f3ff;
+            border-left: 4px solid #2196f3;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .info a {
+            color: #2196f3;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .info a:hover {
+            text-decoration: underline;
+        }
+
+        .loading {
+            text-align: center;
+            color: #667eea;
+            font-weight: 600;
+            margin-top: 16px;
+            display: none;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .models {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .model-btn {
+            flex: 1;
+            padding: 8px;
+            background: #f0f0f0;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .model-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🧪 Gemini API Tester</h1>
+
+        <div class="info">
+            <strong>ℹ️ Info:</strong> Get your API key from
+            <a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a>
+        </div>
+
+        <div class="input-group">
+            <label for="api-key">API Key</label>
+            <input type="password" id="api-key" placeholder="AIza..." autocomplete="off">
+        </div>
+
+        <div class="input-group">
+            <label>Model</label>
+            <div class="models">
+                <button class="model-btn active" data-model="gemini-pro">gemini-pro</button>
+                <button class="model-btn" data-model="gemini-1.5-flash">gemini-1.5-flash</button>
+                <button class="model-btn" data-model="gemini-1.5-pro">gemini-1.5-pro</button>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label for="prompt">Prompt (Test message)</label>
+            <textarea id="prompt" placeholder="Enter your test prompt...">日本語で「こんにちは」の意味を説明してください。</textarea>
+        </div>
+
+        <button id="test-btn">🚀 Test API</button>
+
+        <div class="loading" id="loading">⏳ Calling Gemini API...</div>
+
+        <div class="result" id="result">
+            <h3 id="result-title"></h3>
+            <pre id="result-content"></pre>
+        </div>
+    </div>
+
+    <script>
+        let selectedModel = 'gemini-pro';
+
+        // Model selection
+        document.querySelectorAll('.model-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.model-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedModel = btn.dataset.model;
+                console.log('Selected model:', selectedModel);
+            });
+        });
+
+        // Test API button
+        document.getElementById('test-btn').addEventListener('click', async () => {
+            const apiKey = document.getElementById('api-key').value.trim();
+            const prompt = document.getElementById('prompt').value.trim();
+            const resultDiv = document.getElementById('result');
+            const resultTitle = document.getElementById('result-title');
+            const resultContent = document.getElementById('result-content');
+            const loading = document.getElementById('loading');
+            const testBtn = document.getElementById('test-btn');
+
+            // Validation
+            if (!apiKey) {
+                showResult('error', 'Error', 'Please enter your API key');
+                return;
+            }
+
+            if (!prompt) {
+                showResult('error', 'Error', 'Please enter a prompt');
+                return;
+            }
+
+            // Show loading
+            loading.classList.add('show');
+            resultDiv.classList.remove('show');
+            testBtn.disabled = true;
+
+            try {
+                console.log('Testing with model:', selectedModel);
+                console.log('API Key:', apiKey.substring(0, 10) + '...');
+                console.log('Prompt:', prompt);
+
+                // Build URL
+                const url = `https://generativelanguage.googleapis.com/v1/models/${selectedModel}:generateContent?key=${apiKey}`;
+                console.log('URL:', url.replace(apiKey, 'API_KEY_HIDDEN'));
+
+                // Call API
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: prompt
+                            }]
+                        }]
+                    })
+                });
+
+                console.log('Response status:', response.status);
+
+                const data = await response.json();
+                console.log('Response data:', data);
+
+                if (!response.ok) {
+                    throw new Error(data.error?.message || `HTTP ${response.status}: ${JSON.stringify(data)}`);
+                }
+
+                // Extract text from response
+                const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                if (text) {
+                    showResult('success', '✅ Success!', text);
+                } else {
+                    showResult('error', '⚠️ Unexpected Response', JSON.stringify(data, null, 2));
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                showResult('error', '❌ Error', error.message);
+            } finally {
+                loading.classList.remove('show');
+                testBtn.disabled = false;
+            }
+        });
+
+        function showResult(type, title, content) {
+            const resultDiv = document.getElementById('result');
+            const resultTitle = document.getElementById('result-title');
+            const resultContent = document.getElementById('result-content');
+
+            resultDiv.className = `result ${type} show`;
+            resultTitle.textContent = title;
+            resultContent.textContent = content;
+        }
+
+        // Load API key from localStorage (if available)
+        window.addEventListener('load', () => {
+            const savedKey = localStorage.getItem('geminiApiKey');
+            if (savedKey) {
+                document.getElementById('api-key').value = savedKey;
+            }
+        });
+
+        // Save API key to localStorage when changed
+        document.getElementById('api-key').addEventListener('change', (e) => {
+            if (e.target.value.trim()) {
+                localStorage.setItem('geminiApiKey', e.target.value.trim());
+            }
+        });
+    </script>
+</body>
+
+</html>

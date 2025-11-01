@@ -1,7 +1,7 @@
 // gemini-api.js - Intégration avec l'API Gemini
 
 const GEMINI_API_ENDPOINT =
-	"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
+	"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
 
 // Fonction pour obtenir la clé API
 async function getApiKey() {
@@ -108,12 +108,13 @@ Réponds UNIQUEMENT avec le JSON, sans texte avant ou après.`;
 	});
 
 	if (result.success) {
+		console.log("Réponse brute Gemini:", result.text);
 		try {
-			// Nettoyer le texte pour extraire le JSON
-			let jsonText = result.text.trim();
-
 			// Supprimer les backticks markdown si présents
-			jsonText = jsonText.replace(/```json\n?/g, "").replace(/```\n?/g, "");
+			let jsonText = result.text
+				.replace(/```json\n?/g, "")
+				.replace(/```\n?/g, "")
+				.trim();
 
 			const exercises = JSON.parse(jsonText);
 			return { success: true, exercises };

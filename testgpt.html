@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Gemini 2.5 Flash API Test</title>
+</head>
+
+<body>
+    <h1>Gemini 2.5 Flash API Test</h1>
+
+    <label>API Key:</label><br>
+    <input type="password" id="apiKey" placeholder="Enter your API key" size="50"><br><br>
+
+    <label>Prompt:</label><br>
+    <textarea id="prompt" rows="5" cols="60" placeholder="Enter your prompt here"></textarea><br><br>
+
+    <button id="sendBtn">Send Request</button>
+
+    <h3>Response:</h3>
+    <pre id="response"></pre>
+
+    <script>
+        // ✅ Nouveau modèle ici :
+        const endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
+
+        document.getElementById("sendBtn").addEventListener("click", async () => {
+            const apiKey = document.getElementById("apiKey").value.trim();
+            const prompt = document.getElementById("prompt").value.trim();
+            const output = document.getElementById("response");
+
+            if (!apiKey || !prompt) {
+                output.textContent = "❌ Please enter both API key and prompt.";
+                return;
+            }
+
+            output.textContent = "⏳ Sending request...";
+
+            try {
+                const res = await fetch(`${endpoint}?key=${apiKey}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{ text: prompt }]
+                        }]
+                    })
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    output.textContent = `❌ Error ${res.status}:\n` + JSON.stringify(data, null, 2);
+                    return;
+                }
+
+                // ✅ Récupère la sortie texte proprement
+                const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "(no text response)";
+                output.textContent = text;
+
+            } catch (err) {
+                output.textContent = "💥 Request failed:\n" + err.message;
+            }
+        });
+    </script>
+</body>
+
+</html>
